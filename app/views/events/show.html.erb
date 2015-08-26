@@ -1,34 +1,12 @@
-<p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Name:</strong>
+<header>
+  <p>Event:
   <%= @event.name %>
 </p>
+</header>
+<%= render @event %>
+  <div class="item-subattr">
+  </div>
 
-<p>
-  <strong>Start at:</strong>
-  <%= @event.start_at %>
-</p>
+<%= link_to raw("&larr; Back to Calendar"), calendar_path %>
 
-<p>
-  <strong>End at:</strong>
-  <%= @event.end_at %>
-</p>
-
-<p>
-  <strong>Max teams:</strong>
-  <%= @event.max_teams %>
-</p>
-
-<p>
-  <strong>Max team members:</strong>
-  <%= @event.max_team_members %>
-</p>
-
-<p>
-  <strong>Min team members:</strong>
-  <%= @event.min_team_members %>
-</p>
-
-<%= link_to 'Edit', edit_event_path(@event) %> |
-<%= link_to 'Back', events_path %>
