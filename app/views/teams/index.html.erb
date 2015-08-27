@@ -19,7 +19,7 @@
         <td><%= team.event.name %></td>
         <td><%= team.owner.first_name %> <%= team.owner.last_name %></td>
         <td><%= link_to 'Show', team %></td>
-        <td><%= link_to 'Edit', edit_team_path(team) %></td>
+        <td><%= link_to 'Edit', edit_event_team_path(team) %></td>
         <td><%= link_to 'Destroy', team, method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -28,4 +28,4 @@
 
 <br>
 
-<%= link_to 'New Team', new_team_path %>
+

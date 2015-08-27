@@ -1,23 +1,19 @@
-<p id="notice"><%= notice %></p>
+<tr>
 
-<p>
-  <strong>Name:</strong>
+<td>
   <%= team.name %>
-</p>
-
-<p>
-  <strong>Current Members:</strong>
+</td>
+<td>
   <%= team.event.users.count %>
-</p>
-
-<p>
-  <strong>Owner:</strong>
+</td>
+<td>
+  <%= @event.max_team_members - team.event.users.count %>
+</td>
+<td>
   <%= team.owner.first_name %> <%= team.owner.last_name %>
-</p>
+</td>
+<td>
+	Join Team | Edit Team | Leave Team
+</td>
 
-<p>
-	<%= team.users.map { |s| s.first_name }.join('<br/>').html_safe %>
-</p>
-
-<%= link_to 'Edit', edit_team_path(team) %> |
-<%= link_to 'Back', teams_path %>
+</tr>

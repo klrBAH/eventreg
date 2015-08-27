@@ -1,5 +1,6 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: [:show, :edit, :update, :destroy]
+  respond_to :html
 
   # GET /teams
   # GET /teams.json
@@ -13,8 +14,11 @@ class TeamsController < ApplicationController
   end
 
   # GET /teams/new
+
+
   def new
-    @team = Team.new
+    @team = event.teams.new
+    respond_with [event, @team]
   end
 
   # GET /teams/1/edit
@@ -62,6 +66,10 @@ class TeamsController < ApplicationController
   end
 
   private
+
+  def event
+    @event ||= Event.find(params[:event_id])
+  end
     # Use callbacks to share common setup or constraints between actions.
     def set_team
       @team = Team.find(params[:id])
