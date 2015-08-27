@@ -4,17 +4,17 @@
   <%= link_to team.name, event_team_path(@event, team) %>
 </td>
 <td>
-  <%= team.event.users.count %>
+  <%= team.users.count %>
 </td>
 <td>
-  <%= (@event.max_team_members - team.event.users.count) > 0 ? @event.max_team_members - team.event.users.count : "Full" %>
+  <%= (@event.max_team_members - team.users.count) > 0 ? @event.max_team_members - team.users.count : "Full" %>
 </td>
 <td>
   <%= team.owner.first_name %> <%= team.owner.last_name %>
 </td>
 <td>
 	<% if !team.users.include?(current_user) %>
-		<% if (@event.max_team_members - team.event.users.count) > 0 %>
+		<% if (@event.max_team_members - team.users.count) > 0 && team.event.users.singletons.include?(current_user)  %>
 			<%= link_to 'Join Team', join_team_event_team_path(@event, team), method: :put %>
 		<% end %>
 	<% else %>

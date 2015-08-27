@@ -16,16 +16,17 @@ class TeamsController < ApplicationController
   end
 
   def join_team
-    @event_team_user = @team.event_team_users.new
+    @event_team_user = @team.event.event_team_users.find_or_initialize_by(user: current_user)
     @event_team_user.event = @team.event
-    @event_team_user.user = current_user
-      if @event_team_user.save
-        redirect_to(event_team_path(event,@team))
+    @event_team_user.team = @team
+
+      if @team.users.count < @team.event.max_team_members && @event_team_user.save
+        redirect_to(event_path(event))
         # format.html { render :show }
         # format.json { render :show, status: :created, location: @team }
       else
-        format.html { render :new }
-        format.json { render json: @team.errors, status: :unprocessable_entity }
+        redirect_to(event_path(event), :notice => 'Sorry, this team is full.')
+        # format.json { render json: @team.errors, status: :unprocessable_entity }
       end
 
   end
@@ -35,7 +36,7 @@ class TeamsController < ApplicationController
     # @event_team_user.team_id = 0
     team = @event_team_user.team
       if @event_team_user.update(team_id: -1)
-        redirect_to(event_team_path(@event_team_user.event,team))
+        redirect_to(event_path(@event_team_user.event))
         # format.html { render :show }
         # format.json { render :show, status: :created, location: @team }
       else
