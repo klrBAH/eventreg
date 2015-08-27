@@ -5,7 +5,13 @@ Rails.application.routes.draw do
 
   # resources :teams
   resources :events do
-    resources :teams
+    resources :teams do
+      member do
+        put :join_team
+        put :leave_team
+      end
+    end
+    resources :event_team_users
   end
   resources :users
 

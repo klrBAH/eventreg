@@ -1,6 +1,8 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: [:show, :edit, :update, :destroy]
+  before_action :set_team, only: [:show, :edit, :update, :destroy, :join_team]
+  before_action :set_event_team_user, only: [:leave_team]
   respond_to :html
+    before_action :authenticate_user!, only: [:new, :create, :edit, :update, :destroy]
 
   # GET /teams
   # GET /teams.json
@@ -13,9 +15,39 @@ class TeamsController < ApplicationController
   def show
   end
 
+  def join_team
+    @event_team_user = @team.event_team_users.new
+    @event_team_user.event = @team.event
+    @event_team_user.user = current_user
+      if @event_team_user.save
+        redirect_to(event_team_path(event,@team))
+        # format.html { render :show }
+        # format.json { render :show, status: :created, location: @team }
+      else
+        format.html { render :new }
+        format.json { render json: @team.errors, status: :unprocessable_entity }
+      end
+
+  end
+
+
+  def leave_team
+    # @event_team_user.team_id = 0
+    team = @event_team_user.team
+      if @event_team_user.update(team_id: -1)
+        redirect_to(event_team_path(@event_team_user.event,team))
+        # format.html { render :show }
+        # format.json { render :show, status: :created, location: @team }
+      else
+        format.html { render :new }
+        format.json { render json: @team.errors, status: :unprocessable_entity }
+      end
+
+  end
+
+
+
   # GET /teams/new
-
-
   def new
     @team = event.teams.new
     respond_with [event, @team]
@@ -28,11 +60,14 @@ class TeamsController < ApplicationController
   # POST /teams
   # POST /teams.json
   def create
-    @team = Team.new(team_params)
+    @team = event.teams.new(team_params)
+    @team.owner = current_user
 
     respond_to do |format|
       if @team.save
-        format.html { redirect_to @team, notice: 'Team was successfully created.' }
+        @team.uid = @team.name.parameterize+'-'+@team.id.to_s
+        @team.save
+        format.html {redirect_to(event_team_path(event,@team), :notice => 'The new team was created')}
         format.json { render :show, status: :created, location: @team }
       else
         format.html { render :new }
@@ -73,6 +108,10 @@ class TeamsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_team
       @team = Team.find(params[:id])
+    end
+
+    def set_event_team_user
+      @event_team_user = EventTeamUser.find_by event_id: params[:event_id], team_id: params[:id]
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

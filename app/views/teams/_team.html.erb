@@ -1,19 +1,26 @@
 <tr>
 
 <td>
-  <%= team.name %>
+  <%= link_to team.name, event_team_path(@event, team) %>
 </td>
 <td>
   <%= team.event.users.count %>
 </td>
 <td>
-  <%= @event.max_team_members - team.event.users.count %>
+  <%= (@event.max_team_members - team.event.users.count) > 0 ? @event.max_team_members - team.event.users.count : "Full" %>
 </td>
 <td>
   <%= team.owner.first_name %> <%= team.owner.last_name %>
 </td>
 <td>
-	Join Team | Edit Team | Leave Team
+	<% if !team.users.include?(current_user) %>
+		<% if (@event.max_team_members - team.event.users.count) > 0 %>
+			<%= link_to 'Join Team', join_team_event_team_path(@event, team), method: :put %>
+		<% end %>
+	<% else %>
+		<%= link_to 'Leave Team', leave_team_event_team_path(@event, team), method: :put %>
+	<% end %>
+	<%= team.owner == current_user  ? link_to('Edit Team', edit_event_team_path(@event, team)) : "" %>
 </td>
 
 </tr>

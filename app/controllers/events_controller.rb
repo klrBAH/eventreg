@@ -1,6 +1,7 @@
 class EventsController < ApplicationController
   before_action :set_event, only: [:show, :edit, :update, :destroy]
 
+
   # GET /events
   # GET /events.json
   def index
@@ -28,6 +29,8 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
+        @event.uid = @event.name.parameterize+'-'+@event.id.to_s
+        @event.save
         format.html { redirect_to @event, notice: 'Event was successfully created.' }
         format.json { render :show, status: :created, location: @event }
       else
